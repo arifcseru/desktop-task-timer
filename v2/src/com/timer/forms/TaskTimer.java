@@ -240,7 +240,6 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         BackgroundPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         loadTasksButton.setForeground(new java.awt.Color(255, 255, 255));
-        loadTasksButton.setText("reload");
         loadTasksButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 loadTasksButtonMouseClicked(evt);
