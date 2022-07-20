@@ -33,6 +33,8 @@ public class TaskTimerDBOperation {
             stmt = c.createStatement();
             String sql = "INSERT INTO TASKS(TASKDETAILS,TIMELIMIT) VALUES('" + taskTimerTO.getTaskDetails() + "'," + taskTimerTO.getTimeLimit() + ")";
             stmt.executeUpdate(sql);
+            stmt.close();
+            c.close();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(TestSQLite.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -93,10 +95,64 @@ public class TaskTimerDBOperation {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(TestSQLite.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(TestSQLite.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+            Logger.getLogger(TestSQLite.class.getName()).log(Level.SEVERE, null, "Initializing App.");
+            createTable();
+            addDefaultTasks();
+            taskTimerTOList = retrieveLastFiveTasks();
         }
         return (ArrayList<TaskTimerTO>) taskTimerTOList;
+    }
+
+    public void createTable() {
+        Connection c = null;
+
+        Statement stmt = null;
+
+        try {
+
+            Class.forName("org.sqlite.JDBC");
+
+            c = DriverManager.getConnection("jdbc:sqlite:TaskTimer.db");
+
+            System.out.println("Database Opened...\n");
+
+            stmt = c.createStatement();
+
+            String sql = "CREATE TABLE TASKS "
+                    + "(ID INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + " TASKDETAILS VARCHAR NOT NULL, "
+                    + " TIMELIMIT INT NOT NULL) ";
+
+            stmt.executeUpdate(sql);
+
+            stmt.close();
+
+            c.close();
+
+        } catch (Exception e) {
+
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage());
+            System.exit(0);
+
+        }
+
+        System.out.println("Table Product Created Successfully!!!");
+    }
+
+    private synchronized void addDefaultTasks() {
+        try {
+            System.out.println("Adding Default Tasks.");
+            for (int i = 0; i < 5; i++) {
+                TaskTimerTO taskTimerTO = new TaskTimerTO();
+                taskTimerTO.setTaskDetails("Default Task..");
+                taskTimerTO.setTimeLimit(100);
+                this.createTask(taskTimerTO);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, String.valueOf(e.getMessage()));
+        }
     }
 
     public TaskTimerTO retrieveLastTask() {
@@ -196,7 +252,7 @@ public class TaskTimerDBOperation {
 
     public void deleteTask(Integer id) {
         List<TaskTimerTO> allTasks = retrieveAllTasks();
-        
+
         if (allTasks.size() > 5) {
             Connection c = null;
             Statement stmt = null;
@@ -216,7 +272,7 @@ public class TaskTimerDBOperation {
                 Logger.getLogger(TestSQLite.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(null, ex.getMessage());
             }
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "You Cannot delete this task");
         }
     }
