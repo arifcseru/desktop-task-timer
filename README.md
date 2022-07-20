@@ -1,9 +1,14 @@
-# desktop-task-timer
+# Productivity Task Timer
+
 This is desktop task timer
 
-# Download the jar file and db file
-# Install java on your pc (jdk 1.8 recommended)
+1. Download the jar file and db file
+2. Install java on your pc (jdk 1.8 recommended)
 
-# Double Click 'TaskTimer.jar'
+3. Double Click 'TaskTimer.jar'
 
-<img src="relative/path/in/repository/to/image.svg" width="128"/>
+Image (Hand draw theme)
+<img src="publish/BigWindowBackground.gif" width="128"/>
+
+Image (Standard theme)
+<img src="publish/BigWindowBackground_linux.gif" width="128"/>
