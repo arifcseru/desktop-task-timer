@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.timer.forms;
 
 import com.timer.db.TaskTimerDBOperation;
@@ -18,7 +17,7 @@ import javax.swing.Timer;
  *
  * @author BDTUNE
  */
-public class TinyTimer extends javax.swing.JFrame implements ActionListener{
+public class TinyTimer extends javax.swing.JFrame implements ActionListener {
 
     /**
      * Creates new form TinyTimer
@@ -27,28 +26,27 @@ public class TinyTimer extends javax.swing.JFrame implements ActionListener{
     int yMouse;
     int counter = 0;
     Integer taskTimeLeft;
-    
-    
+
     Timer timer = new Timer(1000, (ActionListener) this);
     Integer timeLimit;
     Integer min;
     Integer sec;
     Integer hr;
     TaskTimerDBOperation bOperation = new TaskTimerDBOperation();
-        List <TaskTimerTO>taskTimerTOList;
+    List<TaskTimerTO> taskTimerTOList;
     Integer selectedTaskId = TaskTimer.activeTaskId;
+
     public TinyTimer() {
         initComponents();//(int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight()-200)
-       // this.setSize(300, 50);
-        this.setLocation((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-100), 0);
-       taskTimerTOList = bOperation.retrieveLastFiveTasks();
-        
-        
-        System.out.println("Sel: "+selectedTaskId);
-        if (selectedTaskId!=0 && TaskTimer.isTimerStop == false) {
-            this.taskTimeLeft = this.taskTimerTOList.get(selectedTaskId-1).getTimeLimit();
-            
-           timer.start(); 
+        // this.setSize(300, 50);
+        this.setLocation((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - 100), 0);
+        taskTimerTOList = bOperation.retrieveLastFiveTasks();
+
+        System.out.println("Sel: " + selectedTaskId);
+        if (selectedTaskId != 0) {
+            this.taskTimeLeft = this.taskTimerTOList.get(selectedTaskId - 1).getTimeLimit();
+
+            timer.start();
         }/*else{
             selectedTaskId = 1;
             this.taskTimeLeft = this.taskTimerTOList.get(selectedTaskId-1).getTimeLimit();
@@ -56,17 +54,18 @@ public class TinyTimer extends javax.swing.JFrame implements ActionListener{
         }*/
         if (TaskTimer.toBeActivatedTheme.equalsIgnoreCase("windows")) {
             backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/timer/pictures/tinyTimer_linux.gif")));
-        }else{
-         backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/timer/pictures/tinyTimer.gif"))); // NOI18N
-       
+        } else {
+            backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/timer/pictures/tinyTimer.gif"))); // NOI18N
+
         }
-   }
+    }
+
     private void updateTaskTimerRecords() {
-        if (taskTimerTOList!=null) {
-            taskTimerTOList.get(TaskTimer.activeTaskId-1).setTimeLimit(taskTimeLeft);
+        if (taskTimerTOList != null) {
+            taskTimerTOList.get(TaskTimer.activeTaskId - 1).setTimeLimit(taskTimeLeft);
             bOperation.updateTasks(taskTimerTOList);
         }
-       
+
     }
 
     /**
@@ -79,8 +78,9 @@ public class TinyTimer extends javax.swing.JFrame implements ActionListener{
     private void initComponents() {
 
         taskTimeLeftLabel = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        closeBtn = new javax.swing.JLabel();
+        mazimizeBtn = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         backgroundLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -96,20 +96,28 @@ public class TinyTimer extends javax.swing.JFrame implements ActionListener{
         taskTimeLeftLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         taskTimeLeftLabel.setForeground(new java.awt.Color(204, 0, 204));
         taskTimeLeftLabel.setText("--h --m --s");
-        getContentPane().add(taskTimeLeftLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 100, 10));
+        getContentPane().add(taskTimeLeftLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 70, 10));
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(204, 0, 204));
-        jLabel3.setText("rem.. ");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 40, 10));
-
-        jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+        closeBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        closeBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel2MouseClicked(evt);
+                closeBtnMouseClicked(evt);
             }
         });
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 0, 20, 10));
+        getContentPane().add(closeBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 10, 20, 10));
+
+        mazimizeBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        mazimizeBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mazimizeBtnMouseClicked(evt);
+            }
+        });
+        getContentPane().add(mazimizeBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, 20, 10));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(204, 0, 204));
+        jLabel1.setText("Rem:");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 30, -1));
 
         backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/timer/pictures/tinyTimer_linux.gif"))); // NOI18N
         backgroundLabel.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -137,28 +145,36 @@ public class TinyTimer extends javax.swing.JFrame implements ActionListener{
         // TODO add your handling code here:
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();
-        
+
         this.setLocation(x - xMouse, y - yMouse);
     }//GEN-LAST:event_backgroundLabelMouseDragged
 
-    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+    private void closeBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeBtnMouseClicked
         // TODO add your handling code here:
+       System.exit(0);
+
+    }//GEN-LAST:event_closeBtnMouseClicked
+
+    private void mazimizeBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mazimizeBtnMouseClicked
+        // TODO add your handling code here:
+         if (timer.isRunning()) {
+            timer.stop();
+        }
         SmallTimerFrame smallTimerFrame = new SmallTimerFrame();
         smallTimerFrame.setVisible(true);
         this.dispose();
-        
-    }//GEN-LAST:event_jLabel2MouseClicked
+    }//GEN-LAST:event_mazimizeBtnMouseClicked
 
     /**
      * @param args the command line arguments
      */
     //public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    /* Set the Nimbus look and feel */
+    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-/*        try {
+     */
+ /*        try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -177,7 +193,7 @@ public class TinyTimer extends javax.swing.JFrame implements ActionListener{
         //</editor-fold>
 
         /* Create and display the form */
-       /* java.awt.EventQueue.invokeLater(new Runnable() {
+ /* java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new TinyTimer().setVisible(true);
             }
@@ -186,31 +202,31 @@ public class TinyTimer extends javax.swing.JFrame implements ActionListener{
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel backgroundLabel;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel closeBtn;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel mazimizeBtn;
     private javax.swing.JLabel taskTimeLeftLabel;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void actionPerformed(ActionEvent e) {
-    
-         if (taskTimeLeft<=0) {
+        // System.out.println("Tiny Timer call..");
+        if (taskTimeLeft <= 0) {
             taskTimeLeft = 0;
             timer.stop();
         }
+        min = taskTimeLeft / 60;
+        sec = taskTimeLeft % 60;
+        hr = min / 60;
+        if (min >= 60) {
+            min = min % 60;
+        }
+        this.taskTimeLeftLabel.setText(hr.toString() + " h " + min.toString() + " m " + sec.toString() + "s");
         this.taskTimeLeft--;
-        min = taskTimeLeft/60;
-        sec = taskTimeLeft%60;
-        hr = min/60;
-        if (min>=60) {
-         min = min %60; 
-         }
-        this.taskTimeLeftLabel.setText(hr.toString()+" h "+min.toString()+" m "+sec.toString()+"s");
-        
+
         counter++;
-        if (counter>=20) {
+        if (counter >= 20) {
             this.counter = 0;
-           // this.update
             this.updateTaskTimerRecords();
         }
     }
