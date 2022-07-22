@@ -37,6 +37,7 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
     Integer taskTimeLeft;
     Integer totalTimeLimit;
 
+    Timer clockTimer = new Timer(1000, (ActionListener) this);
     Timer timer = new Timer(1000, (ActionListener) this);
 
     Integer timeLimit;
@@ -50,14 +51,15 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
     public SmallTimerFrame() {
         initComponents();
         TaskTimer.activeTaskTimerWindow = "Minimum";
-        this.closeLabel.setVisible(false);
+//        this.closeLabel.setVisible(false);
         this.setSize(300, 100);
         this.setLocation((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() - this.getSize().getWidth() - 10), (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() - this.getSize().getHeight() - 40));
         // System.out.println(TaskTimer.activeTaskId);
         taskTimerTOList = bOperation.retrieveLastFiveTasks();
 
         //System.out.println("Sel: "+selectedTaskId);
-        if (selectedTaskId != 0 && TaskTimer.isTimerStop == false) {
+        clockTimer.start();
+        if (selectedTaskId != 0) {
             timer.start();
             this.taskDetailsLabel.setText(this.taskTimerTOList.get(selectedTaskId - 1).getTaskDetails());
             this.totalTimeLimit = this.taskTimerTOList.get(selectedTaskId - 1).getTimeLimit();
@@ -102,9 +104,9 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
     private void initComponents() {
 
         maximizeLabel = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        addLabel = new javax.swing.JLabel();
         closeLabel = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        minimizeLabel = new javax.swing.JLabel();
         taskTimeLeftLabel = new javax.swing.JLabel();
         taskDetailsLabel = new javax.swing.JLabel();
         startButton = new javax.swing.JButton();
@@ -123,20 +125,17 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 maximizeLabelMouseClicked(evt);
             }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                maximizeLabelMousePressed(evt);
-            }
         });
-        getContentPane().add(maximizeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 0, 40, 20));
+        getContentPane().add(maximizeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 0, 20, 20));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+        addLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        addLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        addLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel1MouseClicked(evt);
+                addLabelMouseClicked(evt);
             }
         });
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 20, 20));
+        getContentPane().add(addLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 20, 20));
 
         closeLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         closeLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -145,15 +144,15 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
                 closeLabelMouseClicked(evt);
             }
         });
-        getContentPane().add(closeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 0, 10, 10));
+        getContentPane().add(closeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 0, 20, 20));
 
-        jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+        minimizeLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        minimizeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel2MouseClicked(evt);
+                minimizeLabelMouseClicked(evt);
             }
         });
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 0, 20, 20));
+        getContentPane().add(minimizeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 20, 20));
 
         taskTimeLeftLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         taskTimeLeftLabel.setForeground(new java.awt.Color(0, 153, 0));
@@ -209,28 +208,29 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
         System.exit(0);
     }//GEN-LAST:event_closeLabelMouseClicked
 
-    private void maximizeLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_maximizeLabelMousePressed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_maximizeLabelMousePressed
-
     private void maximizeLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_maximizeLabelMouseClicked
         // TODO add your handling code here:
         updateTaskTimerRecords();
         if (!this.timer.isRunning()) {
             TaskTimer.activeTaskId = 0;
         }
+        if (this.timer.isRunning()) {
+            this.timer.stop();
+        }
+        if (this.clockTimer.isRunning()) {
+            this.clockTimer.stop();
+        }
         TaskTimer taskTimer = new TaskTimer();
         taskTimer.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_maximizeLabelMouseClicked
 
-    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+    private void addLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addLabelMouseClicked
         // TODO add your handling code here:
         AddTaskTimer addTaskTimer = new AddTaskTimer();
         addTaskTimer.setVisible(true);
         //this.dispose();
-    }//GEN-LAST:event_jLabel1MouseClicked
+    }//GEN-LAST:event_addLabelMouseClicked
 
     private void backgroundLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundLabelMousePressed
         // TODO add your handling code here:
@@ -246,14 +246,21 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
         this.setLocation(x - xMouse, y - yMouse);
     }//GEN-LAST:event_backgroundLabelMouseDragged
 
-    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+    private void minimizeLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minimizeLabelMouseClicked
         // TODO add your handling code here:
         updateTaskTimerRecords();
+        if (this.timer.isRunning()) {
+            this.timer.stop();
+        }
+        if (this.clockTimer.isRunning()) {
+            this.clockTimer.stop();
+        }
+
         TinyTimer tinyTimer = new TinyTimer();
         tinyTimer.setVisible(true);
 
         this.dispose();
-    }//GEN-LAST:event_jLabel2MouseClicked
+    }//GEN-LAST:event_minimizeLabelMouseClicked
 
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
         // TODO add your handling code here:
@@ -313,12 +320,12 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
     }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel addLabel;
     private javax.swing.JLabel backgroundLabel;
     private javax.swing.JLabel clockLabel;
     private javax.swing.JLabel closeLabel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel maximizeLabel;
+    private javax.swing.JLabel minimizeLabel;
     private javax.swing.JButton startButton;
     private javax.swing.JButton stopButton;
     private javax.swing.JLabel taskDetailsLabel;
@@ -327,10 +334,14 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //System.out.println("Time left: "+taskTimeLeft);
+        // System.out.println("Small Timer Frame timer action.");
         if (taskTimeLeft <= 0) {
             taskTimeLeft = 0;
-            timer.stop();
+            if (timer.isRunning()) {
+                System.out.println("timer stopping...");
+                timer.stop();
+            }
+
             if (taskDetailsLabel.getText().contains("shutdown") || taskDetailsLabel.getText().contains("Shutdown")) {
                 try {
                     this.shutdown();
@@ -341,7 +352,6 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
                 }
             }
         }
-        this.taskTimeLeft--;
         min = taskTimeLeft / 60;
         sec = taskTimeLeft % 60;
         hr = min / 60;
@@ -361,6 +371,7 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
         // System.out.println(ratio);
         this.taskTimeLeftLabel.setText(hr.toString() + " Hour " + min.toString() + " min " + sec.toString() + "sec");
 
+        this.taskTimeLeft--;
         counter++;
         Calendar today = Calendar.getInstance();
         DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy : h-m-s");
@@ -373,12 +384,13 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
         }
         if (taskTimeLeft <= 0) {
             this.updateTaskTimerRecords();
-            if (!this.timer.isRunning()) {
-                TaskTimer.activeTaskId = 0;
-            }
-            TaskTimer taskTimer = new TaskTimer();
-            taskTimer.setVisible(true);
-            this.dispose();
+//            if (!this.timer.isRunning()) {
+//                System.out.println("No Active Tasks.");
+//                TaskTimer.activeTaskId = 0;
+//            }
+//            TaskTimer taskTimer = new TaskTimer();
+//            taskTimer.setVisible(true);
+//            this.dispose();
         }
     }
 

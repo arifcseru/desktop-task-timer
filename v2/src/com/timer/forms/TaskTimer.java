@@ -43,6 +43,7 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
     Integer taskFourTimeLeft;
     Integer taskFiveTimeLeft;
 
+    Timer clockTimer = new Timer(1000, (ActionListener) this);
     Timer timer = new Timer(1000, (ActionListener) this);
 
     Integer timeLimit;
@@ -58,19 +59,44 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         //this.setSize(350, 443);
         this.setLocation((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() - this.getSize().getWidth() - 10), (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() - this.getSize().getHeight() - 40));
         timer.start();
+        clockTimer.start();
         TaskTimer.isTimerStop = false;
         // this.closeLabelBtn.setVisible(false);
         this.checkEnabledTask();
         this.setContents();
         TaskTimer.activeTaskTimerWindow = "Maximum";
         this.changeThemeLabel.setText(TaskTimer.toBeActivatedTheme);
-        startTimerOfTask1Button.setEnabled(true);
-        startTimerOfTask2Button.setEnabled(true);
-        startTimerOfTask3Button.setEnabled(true);
-        startTimerOfTask4Button.setEnabled(true);
-        startTimerOfTask5Button.setEnabled(true);
+        if (TaskTimer.activeTaskId == 1) {
+            startTimerOfTask1Button.setEnabled(false);
+        } else {
+            startTimerOfTask1Button.setEnabled(true);
+        }
+        if (TaskTimer.activeTaskId == 2) {
+            startTimerOfTask2Button.setEnabled(false);
+        } else {
+            startTimerOfTask2Button.setEnabled(true);
+        }
+        if (TaskTimer.activeTaskId == 3) {
+            startTimerOfTask3Button.setEnabled(false);
+        } else {
+            startTimerOfTask3Button.setEnabled(true);
+        }
+        if (TaskTimer.activeTaskId == 4) {
+            startTimerOfTask4Button.setEnabled(false);
+        } else {
+            startTimerOfTask4Button.setEnabled(true);
+        }
+        if (TaskTimer.activeTaskId == 5) {
+            startTimerOfTask5Button.setEnabled(false);
+        } else {
+            startTimerOfTask5Button.setEnabled(true);
+        }
+        if (TaskTimer.activeTaskId == 0) {
+            stopTimerButton.setEnabled(false);
+        } else {
+            stopTimerButton.setEnabled(true);
 
-        stopTimerButton.setEnabled(false);
+        }
 
         if (TaskTimer.toBeActivatedTheme.equalsIgnoreCase("windows")) {
             backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/timer/pictures/BigWindowBackground_linux.gif")));
@@ -119,8 +145,8 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         }
     }
 
-    public  void setContents() {
-
+    public void setContents() {
+        System.out.println("Reloading....");
         taskTimerTOList = bOperation.retrieveLastFiveTasks();
         if (taskTimerTOList.size() >= 5) {
             this.taskOneLabel.setText(taskTimerTOList.get(0).getTaskDetails());
@@ -191,7 +217,6 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
 
         jLabel1 = new javax.swing.JLabel();
         BackgroundPanel = new javax.swing.JPanel();
-        loadTasksButton = new javax.swing.JLabel();
         taskFiveTimeLeftLabel = new javax.swing.JLabel();
         addLabel = new javax.swing.JLabel();
         minimizeLabel = new javax.swing.JLabel();
@@ -214,6 +239,7 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         changeThemeLabel = new javax.swing.JLabel();
         stopTimerButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        reloadButton = new javax.swing.JLabel();
         backgroundLabel = new javax.swing.JLabel();
 
         jLabel1.setText("jLabel1");
@@ -239,14 +265,6 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         });
         BackgroundPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        loadTasksButton.setForeground(new java.awt.Color(255, 255, 255));
-        loadTasksButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                loadTasksButtonMouseClicked(evt);
-            }
-        });
-        BackgroundPanel.add(loadTasksButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 90, -1, -1));
-
         taskFiveTimeLeftLabel.setFont(new java.awt.Font("Arial Black", 0, 16)); // NOI18N
         taskFiveTimeLeftLabel.setForeground(new java.awt.Color(204, 255, 51));
         taskFiveTimeLeftLabel.setText("0h 0m 0s");
@@ -266,9 +284,6 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         minimizeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 minimizeLabelMouseClicked(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                minimizeLabelMouseReleased(evt);
             }
         });
         BackgroundPanel.add(minimizeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 10, 30, 30));
@@ -400,6 +415,7 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         changeThemeLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         changeThemeLabel.setForeground(new java.awt.Color(255, 255, 255));
         changeThemeLabel.setText("Windows");
+        changeThemeLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         changeThemeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 changeThemeLabelMouseReleased(evt);
@@ -410,11 +426,6 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         stopTimerButton.setBackground(new java.awt.Color(0, 153, 51));
         stopTimerButton.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         stopTimerButton.setText("Stop Now");
-        stopTimerButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                stopTimerButtonMouseClicked(evt);
-            }
-        });
         stopTimerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stopTimerButtonActionPerformed(evt);
@@ -425,7 +436,16 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(153, 255, 204));
         jLabel2.setText("Developed by : Md. Arifur Rahman, Email: arif.cse.ru@gmail.com");
-        BackgroundPanel.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, 340, -1));
+        BackgroundPanel.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, 330, -1));
+
+        reloadButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        reloadButton.setName(""); // NOI18N
+        reloadButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                reloadButtonMouseClicked(evt);
+            }
+        });
+        BackgroundPanel.add(reloadButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 80, 30, 20));
 
         backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/timer/pictures/BigWindowBackground_linux.gif"))); // NOI18N
         backgroundLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
@@ -465,8 +485,14 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
     }//GEN-LAST:event_BackgroundPanelMouseDragged
 
     private void minimizeLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minimizeLabelMouseClicked
-
         if (activeTaskId != 0 && TaskTimer.isTimerStop == false) {
+            if (this.timer.isRunning()) {
+                this.timer.stop();
+                TaskTimer.isTimerStop = true;
+            }
+            if (this.clockTimer.isRunning()) {
+                this.clockTimer.stop();
+            }
             SmallTimerFrame smallTimerFrame = new SmallTimerFrame();
             smallTimerFrame.setVisible(true);
             TaskTimer.activeTaskTimerWindow = "Minimum";
@@ -573,15 +599,10 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         activeTaskId = 4;
     }//GEN-LAST:event_startTimerOfTask4ButtonActionPerformed
 
-    private void stopTimerButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stopTimerButtonMouseClicked
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_stopTimerButtonMouseClicked
-
     private void stopTimerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopTimerButtonActionPerformed
         // TODO add your handling code here:
-        if (timer.isRunning()) {
-            timer.stop();
+        if (this.timer.isRunning()) {
+            this.timer.stop();
             TaskTimer.isTimerStop = true;
         }
         startTimerOfTask1Button.setEnabled(true);
@@ -617,11 +638,6 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
 
     }//GEN-LAST:event_changeThemeLabelMouseReleased
 
-    private void minimizeLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minimizeLabelMouseReleased
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_minimizeLabelMouseReleased
-
     private void taskOneLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_taskOneLabelMouseClicked
         bOperation.deleteTask(taskTimerTOList.get(0).getId());
         this.setContents();
@@ -647,10 +663,6 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         this.setContents();
     }//GEN-LAST:event_taskFiveLabelMouseClicked
 
-    private void loadTasksButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loadTasksButtonMouseClicked
-        this.setContents();
-    }//GEN-LAST:event_loadTasksButtonMouseClicked
-
     private void closeLabelBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeLabelBtnMouseClicked
         // TODO add your handling code here:
         System.out.println("Exit in progress..");
@@ -658,11 +670,16 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         this.dispose();
     }//GEN-LAST:event_closeLabelBtnMouseClicked
 
+    private void reloadButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reloadButtonMouseClicked
+        // TODO add your handling code here:
+        this.setContents();
+    }//GEN-LAST:event_reloadButtonMouseClicked
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-    	System.out.println("Main");
+        System.out.println("Main");
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -703,8 +720,8 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JLabel closeLabelBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel loadTasksButton;
     private javax.swing.JLabel minimizeLabel;
+    private javax.swing.JLabel reloadButton;
     private javax.swing.JButton startTimerOfTask1Button;
     private javax.swing.JButton startTimerOfTask2Button;
     private javax.swing.JButton startTimerOfTask3Button;
@@ -725,7 +742,7 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        // System.out.println("Task Timer action.");
         if (taskOneTimeLeft <= 0) {
             taskOneTimeLeft = 0;
             //bOperation.deleteTask(taskTimerTOList.get(0).getId());
@@ -786,7 +803,6 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
             //System.out.println(this.taskOneTimeLeft);  
         }
         if (!this.startTimerOfTask1Button.isEnabled() || activeTaskId == 1) {
-            this.taskOneTimeLeft--;
             min = taskOneTimeLeft / 60;
             sec = taskOneTimeLeft % 60;
             hr = min / 60;
@@ -794,8 +810,8 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
                 min = min % 60;
             }
             this.taskOneTimeLeftLabel.setText(hr.toString() + " Hour " + min.toString() + " min " + sec.toString() + "sec");
+            this.taskOneTimeLeft--;
         } else if (!this.startTimerOfTask2Button.isEnabled() || activeTaskId == 2) {
-            this.taskTwoTimeLeft--;
             min = taskTwoTimeLeft / 60;
             sec = taskTwoTimeLeft % 60;
             hr = min / 60;
@@ -803,8 +819,8 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
                 min = min % 60;
             }
             this.taskTwoTimeLeftLabel.setText(hr.toString() + " Hour " + min.toString() + " min " + sec.toString() + "sec");
+            this.taskTwoTimeLeft--;
         } else if (!this.startTimerOfTask3Button.isEnabled() || activeTaskId == 3) {
-            this.taskThreeTimeLeft--;
             min = taskThreeTimeLeft / 60;
             sec = taskThreeTimeLeft % 60;
             hr = min / 60;
@@ -812,8 +828,8 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
                 min = min % 60;
             }
             this.taskThreeTimeLeftLabel.setText(hr.toString() + " Hour " + min.toString() + " min " + sec.toString() + "sec");
+            this.taskThreeTimeLeft--;
         } else if (!this.startTimerOfTask4Button.isEnabled() || activeTaskId == 4) {
-            this.taskFourTimeLeft--;
             min = taskFourTimeLeft / 60;
             sec = taskFourTimeLeft % 60;
             hr = min / 60;
@@ -821,8 +837,8 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
                 min = min % 60;
             }
             this.taskFourTimeLeftLabel.setText(hr.toString() + " Hour " + min.toString() + " min " + sec.toString() + "sec");
+            this.taskFourTimeLeft--;
         } else if (!this.startTimerOfTask5Button.isEnabled() || activeTaskId == 5) {
-            this.taskFiveTimeLeft--;
             min = taskFiveTimeLeft / 60;
             sec = taskFiveTimeLeft % 60;
             hr = min / 60;
@@ -830,6 +846,7 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
                 min = min % 60;
             }
             this.taskFiveTimeLeftLabel.setText(hr.toString() + " Hour " + min.toString() + " min " + sec.toString() + "sec");
+            this.taskFiveTimeLeft--;
         }
         Calendar today = Calendar.getInstance();
         DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy : h-m-s");
