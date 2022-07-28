@@ -77,10 +77,10 @@ public class TinyTimer extends javax.swing.JFrame implements ActionListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        mazimizeBtn = new javax.swing.JLabel();
         taskTimeLeftLabel = new javax.swing.JLabel();
         closeBtn = new javax.swing.JLabel();
-        mazimizeBtn = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        remLabel = new javax.swing.JLabel();
         backgroundLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -93,10 +93,18 @@ public class TinyTimer extends javax.swing.JFrame implements ActionListener {
         setType(java.awt.Window.Type.UTILITY);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        mazimizeBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        mazimizeBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mazimizeBtnMouseClicked(evt);
+            }
+        });
+        getContentPane().add(mazimizeBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, 20, 10));
+
         taskTimeLeftLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        taskTimeLeftLabel.setForeground(new java.awt.Color(204, 0, 204));
+        taskTimeLeftLabel.setForeground(new java.awt.Color(51, 51, 51));
         taskTimeLeftLabel.setText("--h --m --s");
-        getContentPane().add(taskTimeLeftLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 70, 10));
+        getContentPane().add(taskTimeLeftLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 90, 10));
 
         closeBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         closeBtn.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -106,18 +114,10 @@ public class TinyTimer extends javax.swing.JFrame implements ActionListener {
         });
         getContentPane().add(closeBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 10, 20, 10));
 
-        mazimizeBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        mazimizeBtn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                mazimizeBtnMouseClicked(evt);
-            }
-        });
-        getContentPane().add(mazimizeBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, 20, 10));
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(204, 0, 204));
-        jLabel1.setText("Rem:");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 30, -1));
+        remLabel.setFont(new java.awt.Font("Tahoma", 1, 8)); // NOI18N
+        remLabel.setForeground(new java.awt.Color(204, 0, 204));
+        remLabel.setText("Rem:");
+        getContentPane().add(remLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 10, -1, -1));
 
         backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/timer/pictures/tinyTimer_linux.gif"))); // NOI18N
         backgroundLabel.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -151,13 +151,13 @@ public class TinyTimer extends javax.swing.JFrame implements ActionListener {
 
     private void closeBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeBtnMouseClicked
         // TODO add your handling code here:
-       System.exit(0);
+        System.exit(0);
 
     }//GEN-LAST:event_closeBtnMouseClicked
 
     private void mazimizeBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mazimizeBtnMouseClicked
         // TODO add your handling code here:
-         if (timer.isRunning()) {
+        if (timer.isRunning()) {
             timer.stop();
         }
         SmallTimerFrame smallTimerFrame = new SmallTimerFrame();
@@ -203,8 +203,8 @@ public class TinyTimer extends javax.swing.JFrame implements ActionListener {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel backgroundLabel;
     private javax.swing.JLabel closeBtn;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel mazimizeBtn;
+    private javax.swing.JLabel remLabel;
     private javax.swing.JLabel taskTimeLeftLabel;
     // End of variables declaration//GEN-END:variables
 
@@ -221,7 +221,10 @@ public class TinyTimer extends javax.swing.JFrame implements ActionListener {
         if (min >= 60) {
             min = min % 60;
         }
-        this.taskTimeLeftLabel.setText(hr.toString() + " h " + min.toString() + " m " + sec.toString() + "s");
+        String hourString = hr < 10 ? "0" + hr : hr.toString();
+        String minString = min < 10 ? "0" + min : min.toString();
+        String secString = sec < 10 ? "0" + sec : sec.toString();
+        this.taskTimeLeftLabel.setText(hourString + " h " + minString + " m " + secString + "s");
         this.taskTimeLeft--;
 
         counter++;

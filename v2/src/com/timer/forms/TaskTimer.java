@@ -59,7 +59,6 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         //this.setSize(350, 443);
         this.setLocation((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() - this.getSize().getWidth() - 10), (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() - this.getSize().getHeight() - 40));
         timer.start();
-        clockTimer.start();
         TaskTimer.isTimerStop = false;
         // this.closeLabelBtn.setVisible(false);
         this.checkEnabledTask();
@@ -516,6 +515,9 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         if (!timer.isRunning()) {
             timer.start();
             TaskTimer.isTimerStop = false;
+            if (clockTimer.isRunning()) {
+                clockTimer.stop();
+            }
         }
         startTimerOfTask1Button.setEnabled(true);
         startTimerOfTask2Button.setEnabled(true);
@@ -536,6 +538,9 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         if (!timer.isRunning()) {
             timer.start();
             TaskTimer.isTimerStop = false;
+            if (clockTimer.isRunning()) {
+                clockTimer.stop();
+            }
         }
         startTimerOfTask1Button.setEnabled(true);
         startTimerOfTask2Button.setEnabled(true);
@@ -558,6 +563,9 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         if (!timer.isRunning()) {
             timer.start();
             TaskTimer.isTimerStop = false;
+            if (clockTimer.isRunning()) {
+                clockTimer.stop();
+            }
         }
         startTimerOfTask1Button.setEnabled(false);
         startTimerOfTask2Button.setEnabled(true);
@@ -574,6 +582,9 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         if (!timer.isRunning()) {
             timer.start();
             TaskTimer.isTimerStop = false;
+            if (clockTimer.isRunning()) {
+                clockTimer.stop();
+            }
         }
         startTimerOfTask1Button.setEnabled(true);
         startTimerOfTask2Button.setEnabled(false);
@@ -589,6 +600,9 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         if (!timer.isRunning()) {
             timer.start();
             TaskTimer.isTimerStop = false;
+            if (clockTimer.isRunning()) {
+                clockTimer.stop();
+            }
         }
         startTimerOfTask1Button.setEnabled(true);
         startTimerOfTask2Button.setEnabled(true);
@@ -604,6 +618,9 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
         if (this.timer.isRunning()) {
             this.timer.stop();
             TaskTimer.isTimerStop = true;
+            if (!clockTimer.isRunning()) {
+                clockTimer.start();
+            }
         }
         startTimerOfTask1Button.setEnabled(true);
         startTimerOfTask2Button.setEnabled(true);
@@ -809,7 +826,10 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
             if (min >= 60) {
                 min = min % 60;
             }
-            this.taskOneTimeLeftLabel.setText(hr.toString() + " Hour " + min.toString() + " min " + sec.toString() + "sec");
+            String hourString = hr < 10 ? "0" + hr : hr.toString();
+            String minString = min < 10 ? "0" + min : min.toString();
+            String secString = sec < 10 ? "0" + sec : sec.toString();
+            this.taskOneTimeLeftLabel.setText(hourString + " Hour " + minString + " min " + secString + "sec");
             this.taskOneTimeLeft--;
         } else if (!this.startTimerOfTask2Button.isEnabled() || activeTaskId == 2) {
             min = taskTwoTimeLeft / 60;
@@ -818,7 +838,10 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
             if (min >= 60) {
                 min = min % 60;
             }
-            this.taskTwoTimeLeftLabel.setText(hr.toString() + " Hour " + min.toString() + " min " + sec.toString() + "sec");
+            String hourString = hr < 10 ? "0" + hr : hr.toString();
+            String minString = min < 10 ? "0" + min : min.toString();
+            String secString = sec < 10 ? "0" + sec : sec.toString();
+            this.taskTwoTimeLeftLabel.setText(hourString + " Hour " + minString + " min " + secString + "sec");
             this.taskTwoTimeLeft--;
         } else if (!this.startTimerOfTask3Button.isEnabled() || activeTaskId == 3) {
             min = taskThreeTimeLeft / 60;
@@ -827,7 +850,10 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
             if (min >= 60) {
                 min = min % 60;
             }
-            this.taskThreeTimeLeftLabel.setText(hr.toString() + " Hour " + min.toString() + " min " + sec.toString() + "sec");
+            String hourString = hr < 10 ? "0" + hr : hr.toString();
+            String minString = min < 10 ? "0" + min : min.toString();
+            String secString = sec < 10 ? "0" + sec : sec.toString();
+            this.taskThreeTimeLeftLabel.setText(hourString + " Hour " + minString + " min " + secString + "sec");
             this.taskThreeTimeLeft--;
         } else if (!this.startTimerOfTask4Button.isEnabled() || activeTaskId == 4) {
             min = taskFourTimeLeft / 60;
@@ -836,7 +862,10 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
             if (min >= 60) {
                 min = min % 60;
             }
-            this.taskFourTimeLeftLabel.setText(hr.toString() + " Hour " + min.toString() + " min " + sec.toString() + "sec");
+            String hourString = hr < 10 ? "0" + hr : hr.toString();
+            String minString = min < 10 ? "0" + min : min.toString();
+            String secString = sec < 10 ? "0" + sec : sec.toString();
+            this.taskFourTimeLeftLabel.setText(hourString + " Hour " + minString + " min " + secString + "sec");
             this.taskFourTimeLeft--;
         } else if (!this.startTimerOfTask5Button.isEnabled() || activeTaskId == 5) {
             min = taskFiveTimeLeft / 60;
@@ -845,7 +874,10 @@ public class TaskTimer extends javax.swing.JFrame implements ActionListener {
             if (min >= 60) {
                 min = min % 60;
             }
-            this.taskFiveTimeLeftLabel.setText(hr.toString() + " Hour " + min.toString() + " min " + sec.toString() + "sec");
+            String hourString = hr < 10 ? "0" + hr : hr.toString();
+            String minString = min < 10 ? "0" + min : min.toString();
+            String secString = sec < 10 ? "0" + sec : sec.toString();
+            this.taskFiveTimeLeftLabel.setText(hourString + " Hour " + minString + " min " + secString + "sec");
             this.taskFiveTimeLeft--;
         }
         Calendar today = Calendar.getInstance();
