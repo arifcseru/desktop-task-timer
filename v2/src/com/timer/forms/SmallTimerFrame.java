@@ -58,7 +58,6 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
         taskTimerTOList = bOperation.retrieveLastFiveTasks();
 
         //System.out.println("Sel: "+selectedTaskId);
-        clockTimer.start();
         if (selectedTaskId != 0) {
             timer.start();
             this.taskDetailsLabel.setText(this.taskTimerTOList.get(selectedTaskId - 1).getTaskDetails());
@@ -70,12 +69,12 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
             // selectedTaskId = 1;
             //  this.taskTimeLeft = this.taskTimerTOList.get(selectedTaskId-1).getTimeLimit();
             this.startButton.setEnabled(false);
-            this.stopButton.setEnabled(false);
+            this.stopButton.setEnabled(true);
             JOptionPane.showMessageDialog(null, "Mini TaskTimer (Active Task: " + TaskTimer.activeTaskId + ",isTimerStop: " + TaskTimer.isTimerStop + ")");
 
         }
-        this.startButton.setEnabled(false);
-        this.stopButton.setEnabled(false);
+//        this.startButton.setEnabled(false);
+//        this.stopButton.setEnabled(false);
         if (TaskTimer.toBeActivatedTheme.equalsIgnoreCase("windows")) {
             backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/timer/pictures/backgroundImage_linux.gif"))); // NOI18N
 
@@ -335,11 +334,41 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
     @Override
     public void actionPerformed(ActionEvent e) {
         // System.out.println("Small Timer Frame timer action.");
-        if (taskTimeLeft <= 0) {
+
+        if (timer.isRunning()) {
+            min = taskTimeLeft / 60;
+            sec = taskTimeLeft % 60;
+            hr = min / 60;
+            if (min >= 60) {
+                min = min % 60;
+            }
+            Double ratio = (Double.parseDouble(taskTimeLeft.toString()) / Double.parseDouble(totalTimeLimit.toString())) * 100;
+
+            if (ratio >= 50 && ratio < 75) {
+                taskTimeLeftLabel.setForeground(Color.blue);
+            } else if (ratio >= 25 && ratio < 50) {
+                taskTimeLeftLabel.setForeground(Color.yellow);
+            } else if (ratio > 0 && ratio < 25) {
+                taskTimeLeftLabel.setForeground(Color.red);
+            }
+
+            // System.out.println(ratio);
+            String hourString = hr < 10 ? "0" + hr : hr.toString();
+            String minString = min < 10 ? "0" + min : min.toString();
+            String secString = sec < 10 ? "0" + sec : sec.toString();
+            this.taskTimeLeftLabel.setText(hourString + " Hour " + minString + " min " + secString + "sec");
+
+            this.taskTimeLeft--;
+            counter++;
+        } else {
+            counter = 0;
+        }
+        if (taskTimeLeft < 0) {
             taskTimeLeft = 0;
             if (timer.isRunning()) {
                 System.out.println("timer stopping...");
                 timer.stop();
+                clockTimer.start();
             }
 
             if (taskDetailsLabel.getText().contains("shutdown") || taskDetailsLabel.getText().contains("Shutdown")) {
@@ -352,27 +381,6 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
                 }
             }
         }
-        min = taskTimeLeft / 60;
-        sec = taskTimeLeft % 60;
-        hr = min / 60;
-        if (min >= 60) {
-            min = min % 60;
-        }
-        Double ratio = (Double.parseDouble(taskTimeLeft.toString()) / Double.parseDouble(totalTimeLimit.toString())) * 100;
-
-        if (ratio >= 50 && ratio < 75) {
-            taskTimeLeftLabel.setForeground(Color.blue);
-        } else if (ratio >= 25 && ratio < 50) {
-            taskTimeLeftLabel.setForeground(Color.yellow);
-        } else if (ratio > 0 && ratio < 25) {
-            taskTimeLeftLabel.setForeground(Color.red);
-        }
-
-        // System.out.println(ratio);
-        this.taskTimeLeftLabel.setText(hr.toString() + " Hour " + min.toString() + " min " + sec.toString() + "sec");
-
-        this.taskTimeLeft--;
-        counter++;
         Calendar today = Calendar.getInstance();
         DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy : h-m-s");
 

@@ -26,3 +26,9 @@ Image (Standard theme)
     * Reload button is not working
     * During restore window running tasks button was not disabled which should be.
     * Stop Now button is not disabled/enabled properly
+
+#Fixing 29-July-2022
+	* 2 seconds decrementing in task timer instead of 1 second decrementing
+	* In tiny timer seconds counter is invisible , it should be visible
+	* In mini timer screen start-stop button should work properly 
+	* In tiny timer task counter label font color should be black
