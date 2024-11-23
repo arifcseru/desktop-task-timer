@@ -37,8 +37,8 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
     Integer taskTimeLeft;
     Integer totalTimeLimit;
 
-    Timer clockTimer = new Timer(1000, (ActionListener) this);
-    Timer timer = new Timer(1000, (ActionListener) this);
+    Timer appTimer = new Timer(1000, (ActionListener) this);
+    Timer taskTimer = new Timer(1000, (ActionListener) this);
 
     Integer timeLimit;
     Integer min;
@@ -57,9 +57,10 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
         // System.out.println(TaskTimer.activeTaskId);
         taskTimerTOList = bOperation.retrieveLastFiveTasks();
 
-        //System.out.println("Sel: "+selectedTaskId);
+        System.out.println("Sel: " + selectedTaskId);
         if (selectedTaskId != 0) {
-            timer.start();
+            taskTimer.start();
+            System.out.println("Task : " + this.taskTimerTOList.get(selectedTaskId - 1).getTaskDetails());
             this.taskDetailsLabel.setText(this.taskTimerTOList.get(selectedTaskId - 1).getTaskDetails());
             this.totalTimeLimit = this.taskTimerTOList.get(selectedTaskId - 1).getTimeLimit();
             this.taskTimeLeft = this.taskTimerTOList.get(selectedTaskId - 1).getTimeLimit();
@@ -82,6 +83,27 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
             backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/timer/pictures/backgroundImage.gif"))); // NOI18N
 
         }
+
+        // Initialize the app timer (ticks every second)
+        appTimer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                appTimerActionPerformed();
+            }
+
+        });
+
+        // Initialize the task timer (ticks every second)
+        taskTimer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                taskTimerActionPerformed();
+            }
+        });
+
+        // Start both timers
+        appTimer.start();
+        taskTimer.start();
 
     }
 
@@ -212,14 +234,14 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
     private void maximizeLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_maximizeLabelMouseClicked
         // TODO add your handling code here:
         updateTaskTimerRecords();
-        if (!this.timer.isRunning()) {
+        if (!this.taskTimer.isRunning()) {
             TaskTimer.activeTaskId = 0;
         }
-        if (this.timer.isRunning()) {
-            this.timer.stop();
+        if (this.taskTimer.isRunning()) {
+            this.taskTimer.stop();
         }
-        if (this.clockTimer.isRunning()) {
-            this.clockTimer.stop();
+        if (this.appTimer.isRunning()) {
+            this.appTimer.stop();
         }
         TaskTimer taskTimer = new TaskTimer();
         taskTimer.setVisible(true);
@@ -250,11 +272,11 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
     private void minimizeLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minimizeLabelMouseClicked
         // TODO add your handling code here:
         updateTaskTimerRecords();
-        if (this.timer.isRunning()) {
-            this.timer.stop();
+        if (this.taskTimer.isRunning()) {
+            this.taskTimer.stop();
         }
-        if (this.clockTimer.isRunning()) {
-            this.clockTimer.stop();
+        if (this.appTimer.isRunning()) {
+            this.appTimer.stop();
         }
 
         TinyTimer tinyTimer = new TinyTimer();
@@ -265,9 +287,9 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
 
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
         // TODO add your handling code here:
-        if (this.timer.isRunning()) {
+        if (this.taskTimer.isRunning()) {
             System.out.println("Timer stopped!");
-            timer.stop();
+            taskTimer.stop();
             TaskTimer.isTimerStop = true;
             startButton.setEnabled(true);
             stopButton.setEnabled(false);
@@ -276,8 +298,8 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         // TODO add your handling code here:
-        if (!this.timer.isRunning()) {
-            timer.start();
+        if (!this.taskTimer.isRunning()) {
+            taskTimer.start();
             TaskTimer.isTimerStop = false;
             System.out.println("Timer started!");
             this.startButton.setEnabled(false);
@@ -333,13 +355,17 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
     private javax.swing.JLabel taskTimeLeftLabel;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println("Small Timer Frame timer action.");
-        if (taskTimeLeft <= 0) {
+    private void appTimerActionPerformed() {
+        Calendar today = Calendar.getInstance();
+        DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy : h-m-s");
+        this.clockLabel.setText(dateFormat.format(today.getTime()));
+    }
+
+    private void taskTimerActionPerformed() {
+        if (taskTimeLeft > 0) {
             // System.out.println("Small Timer Frame timer action.");
 
-            if (timer.isRunning()) {
+            if (taskTimer.isRunning()) {
                 min = taskTimeLeft / 60;
                 sec = taskTimeLeft % 60;
                 hr = min / 60;
@@ -369,10 +395,10 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
             }
             if (taskTimeLeft < 0) {
                 taskTimeLeft = 0;
-                if (timer.isRunning()) {
+                if (taskTimer.isRunning()) {
                     System.out.println("timer stopping...");
-                    timer.stop();
-                    clockTimer.start();
+                    taskTimer.stop();
+//                    appTimer.start();
                 }
 
                 if (taskDetailsLabel.getText().contains("shutdown") || taskDetailsLabel.getText().contains("Shutdown")) {
@@ -385,26 +411,23 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
                     }
                 }
             }
-            Calendar today = Calendar.getInstance();
-            DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy : h-m-s");
 
-            this.clockLabel.setText(dateFormat.format(today.getTime()));
             if (counter >= 20) {
                 this.counter = 0;
                 // this.update
                 this.updateTaskTimerRecords();
             }
+
             if (taskTimeLeft <= 0) {
                 this.updateTaskTimerRecords();
-//            if (!this.timer.isRunning()) {
-//                System.out.println("No Active Tasks.");
-//                TaskTimer.activeTaskId = 0;
-//            }
-//            TaskTimer taskTimer = new TaskTimer();
-//            taskTimer.setVisible(true);
-//            this.dispose();
             }
         }
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+//        System.out.println("Small Timer Frame timer action.");
 
     }
 
