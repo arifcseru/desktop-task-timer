@@ -151,8 +151,9 @@ public class TinyTimer extends javax.swing.JFrame implements ActionListener {
 
     private void closeBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeBtnMouseClicked
         // TODO add your handling code here:
-       System.exit(0);
-
+//       System.exit(0);
+        this.hide();
+        TaskTimer.activeTaskTimerWindow = "Maximum";
     }//GEN-LAST:event_closeBtnMouseClicked
 
     private void mazimizeBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mazimizeBtnMouseClicked

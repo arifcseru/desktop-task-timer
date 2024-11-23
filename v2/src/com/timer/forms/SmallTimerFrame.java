@@ -58,7 +58,6 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
         taskTimerTOList = bOperation.retrieveLastFiveTasks();
 
         //System.out.println("Sel: "+selectedTaskId);
-        clockTimer.start();
         if (selectedTaskId != 0) {
             timer.start();
             this.taskDetailsLabel.setText(this.taskTimerTOList.get(selectedTaskId - 1).getTaskDetails());
@@ -205,7 +204,9 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
 
     private void closeLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeLabelMouseClicked
         // TODO add your handling code here:
-        System.exit(0);
+        //System.exit(0);
+        this.hide();
+        TaskTimer.activeTaskTimerWindow = "Maximum";
     }//GEN-LAST:event_closeLabelMouseClicked
 
     private void maximizeLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_maximizeLabelMouseClicked
@@ -334,12 +335,13 @@ public class SmallTimerFrame extends javax.swing.JFrame implements ActionListene
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // System.out.println("Small Timer Frame timer action.");
+         System.out.println("Small Timer Frame timer action.");
         if (taskTimeLeft <= 0) {
             taskTimeLeft = 0;
             if (timer.isRunning()) {
                 System.out.println("timer stopping...");
                 timer.stop();
+                clockTimer.start();
             }
 
             if (taskDetailsLabel.getText().contains("shutdown") || taskDetailsLabel.getText().contains("Shutdown")) {
